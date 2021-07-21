@@ -1,0 +1,17 @@
+# compile
+
+printf "\e[0;36m* CMPL: \e[0;33mCreating ./bin/\n\e[0m";
+mkdir -p bin
+printf "\e[0;36m* CMPL: \e[0;33mChecking if g++ is installed\n\e[0m"
+sudo apt install g++
+printf "\e[0;36m* CMPL: \e[0;33mCompiling...\n\e[0m";
+
+if g++ -g shell/main.cc -o bin/scbl -O3 -s -Wall -std=c++17; then
+    printf "\e[0;36m* CMPL: \e[0;32mCompiled Succesfully\n";
+
+    printf "\e[0;36m* CMPL: \e[0;33mCopying binary "scbl" to /usr/bin...\n\e[0m";
+    sudo cp ./bin/scbl /usr/bin/
+    printf "\e[0;36m* CMPL: \e[0;32mDone.\n";
+else
+    printf "\e[0;36m* CMPL: \e[0;31mCompilation Failed\n";
+fi
