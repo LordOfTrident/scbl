@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <cstdint>
-#include <algorithm>
 
 #define SCBL_TYPE_INTEGER 0
 #define SCBL_TYPE_FUNCTION 1
@@ -147,20 +146,31 @@ namespace SCBL {
                         
 						++ i;
 					};
+
+					bool found = false;
+
+					ui32 j;
+					for (j = 0; j < Functions.size(); ++ j)
+						if (Functions[j].Name == token) {
+							found = true;
+
+							break;
+						};
         
-					auto FuncIdx = std::find_if(Functions.begin(), Functions.end(), [token] (const SCBL::Function& p_func) {
-						return p_func.Name == token;
-					});
-        
-					if (FuncIdx != Functions.end()) 
-                        Tokens.push_back(Token(SCBL_TYPE_FUNCTION, std::distance(Functions.begin(), FuncIdx)));
+					if (found) 
+                        Tokens.push_back(Token(SCBL_TYPE_FUNCTION, j));
 					else {
-						auto ConstIdx = std::find_if(Constants.begin(), Constants.end(), [token] (const SCBL::Constant& p_const) {
-							return p_const.Name == token;
-						});
+						found = false;
+
+						for (j = 0; j < Constants.size(); ++ j)
+							if (Constants[j].Name == token) {
+								found = true;
+	
+								break;
+							};
         
-						if (ConstIdx != Constants.end()) 
-							Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[std::distance(Constants.begin(), ConstIdx)].Value));
+						if (found) 
+							Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[j].Value));
 						else {
 							ErrorMsg = "Identifier \"" + token + "\" not found";
         
