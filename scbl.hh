@@ -158,7 +158,7 @@ namespace SCBL {
 						};
         
 					if (found) 
-                        Tokens.push_back(Token(SCBL_TYPE_FUNCTION, j));
+						Tokens.push_back(Token(SCBL_TYPE_FUNCTION, j));
 					else {
 						found = false;
 
