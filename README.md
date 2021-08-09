@@ -52,6 +52,8 @@ SCBL is really small and simple, so you only need to include the header file `sc
 - Function(name, callback)
 - Constant(name, value)
 
+`callback` is a function which takes two parameters, `std::vector <ui32>` which are the parameters passed to the SCBL function and `void*` which is the user data.
+
 #### Example:
 ```cc
 #include <iostream>
@@ -61,7 +63,7 @@ int main() {
     SCBL::SCBL_Interpreter SCBLi;
     
     SCBLi.AddConstant(SCBL::Constant("newline", 10));
-    SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <uint32_t> Parameters) {
+    SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <uint32_t> Parameters, void* _) {
         for (uint32_t i = 0; i < (uint32_t)Parameters.size(); ++ i) 
             std::cout << (char)Parameters[i];
     }));

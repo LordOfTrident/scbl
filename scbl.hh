@@ -13,16 +13,16 @@
 #define SCBL_RUNTIME_ERROR 1
 #define SCBL_PARSER_ERROR 1
 
-typedef int8_t  i8;
+typedef int8_t i8;
 typedef int16_t i16;
 typedef int32_t i32;
 
-typedef uint8_t  ui8;
+typedef uint8_t ui8;
 typedef uint16_t ui16;
 typedef uint32_t ui32;
 
 namespace SCBL {
-	typedef void (*callback)(std::vector <ui32>);
+	typedef void (*callback)(std::vector <ui32>, void*);
     
 	class Token {
 	public: 
@@ -210,10 +210,14 @@ namespace SCBL {
 					++ i;
 				};
 
-				Functions[FuncIdx].Callback(Params);
+				Functions[FuncIdx].Callback(Params, UserData);
 			};
 
 		    return SCBL_RUNTIME_OK;
+		};
+
+		void SetUserData(void* p_userdata) {
+			UserData = p_userdata;
 		};
 		
 		void AddFunction(Function p_func) {
@@ -258,5 +262,7 @@ namespace SCBL {
 		std::vector <Token> Tokens;
 		std::vector <Function> Functions;
 		std::vector <Constant> Constants;
+
+		void* UserData;
 	};
 };

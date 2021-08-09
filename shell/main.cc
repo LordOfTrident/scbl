@@ -75,41 +75,41 @@ int main(int argc, char* argv[]) {
 	for (i8 i = 33; i < 127; ++ i)
 		SCBLi.AddConstant(SCBL::Constant(std::string(1, i), i));
 	
-	SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <ui32> Parameters, void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			std::cout << (char)Parameters[i];
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("printf", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("printf", [] (std::vector <ui32> Parameters, void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			std::cout << (char)Parameters[i];
 	    
 		std::cout << std::endl;
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("printfr", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("printfr", [] (std::vector <ui32> Parameters, void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			std::cout << Parameters[i];
 
 		std::cout << std::endl;
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("printr", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("printr", [] (std::vector <ui32> Parameters, void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			std::cout << Parameters[i];
 	}));
 
-	SCBLi.AddFunction(SCBL::Function("cprintr", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("cprintr", [] (std::vector <ui32> Parameters, void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			printf("%i", Parameters[i]);
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("cprint", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("cprint", [] (std::vector <ui32> Parameters, void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			printf("%c", Parameters[i]);
 	}));
 
-	SCBLi.AddFunction(SCBL::Function("puts", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("puts", [] (std::vector <ui32> Parameters, void* _) {
 		std::string str = "";
 		
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
 		puts(str.c_str());
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("putr", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("putr", [] (std::vector <ui32> Parameters, void* _) {
 		std::string str = "";
 	
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 		puts(str.c_str());
 	}));
 
-	SCBLi.AddFunction(SCBL::Function("stof", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("stof", [] (std::vector <ui32> Parameters, void* _) {
 		std::string fname = "";
 		std::string fcontents = "";
 
@@ -140,14 +140,14 @@ int main(int argc, char* argv[]) {
 		WriteFile(fname, fcontents);
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("exit", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("exit", [] (std::vector <ui32> Parameters, void* _) {
 		running = false;
 	    
 		if (Parameters.size() >= 1)
 			exitcode = Parameters[0];
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("help", [] (std::vector <ui32> Parameters) {
+	SCBLi.AddFunction(SCBL::Function("help", [] (std::vector <ui32> Parameters, void* _) {
 		std::cout << "Available functions:\n";
 		std::cout << " Console functions:\n";
 		std::cout << "  print   <...> - Print out encoded characters using std::cout\n";
