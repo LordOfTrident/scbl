@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <string>
@@ -13,6 +14,10 @@
 #define SCBL_RUNTIME_ERROR 1
 #define SCBL_PARSER_ERROR 1
 
+#define SCBL_CONSTANT_1BYTE 1
+#define SCBL_CONSTANT_2BYTES 2
+#define SCBL_CONSTANT_4BYTES 4
+
 typedef int8_t i8;
 typedef int16_t i16;
 typedef int32_t i32;
@@ -22,17 +27,167 @@ typedef uint16_t ui16;
 typedef uint32_t ui32;
 
 namespace SCBL {
-	typedef void (*callback)(std::vector <ui32>, void*);
+	typedef void (*callback)(std::vector <ui8>, void*);
+
+	class ParameterHandler {
+	public:
+		ParameterHandler(std::vector <ui8> p_Parameters):
+			Parameters(p_Parameters),
+			Counter(0),
+			OutOfParams(false)
+		{};
+
+		ui8 GetNextParam8() {
+			if ((ui32)Parameters.size() <= Counter) {
+				OutOfParams = true;
+
+				return 0;
+			};
+
+			return Parameters[Counter];
+		
+			++ Counter;
+		};
+		
+		ui16 GetNextParam16() {
+			if ((ui32)Parameters.size() <= Counter) {
+				OutOfParams = true;
+
+				return 0;
+			};
+
+			std::vector <ui8> Bytes;
+			
+			for (ui8 i = 0; i < 2; ++ i) {
+				if ((ui32)Parameters.size() <= Counter + i) {
+					OutOfParams = true;
+
+					return 0;
+				};
+				
+				Bytes.push_back(Parameters[Counter + i]);
+			};
+
+			Counter += 2;
+
+			return (ui16)((ui32)Bytes[0] << 8) | (ui32)Bytes[1];
+		};
+		
+		ui32 GetNextParam32() {
+			if ((ui32)Parameters.size() <= Counter) {
+				OutOfParams = true;
+
+				return 0;
+			};
+
+			std::vector <ui8> Bytes;
+			
+			for (ui8 i = 0; i < 4; ++ i) {
+				if ((ui32)Parameters.size() <= Counter + i) {
+					OutOfParams = true;
+
+					return 0;
+				};
+				
+				Bytes.push_back(Parameters[Counter + i]);
+			};
+
+			Counter += 4;
+
+			return ((ui32)Bytes[0] << 24) | ((ui32)Bytes[1] << 16) | ((ui32)Bytes[2] << 8) | (ui32)Bytes[3];
+		};
+
+		ui32 GetNextParamInt() {
+			if ((ui32)Parameters.size() <= Counter) {
+				OutOfParams = true;
+
+				return 0;
+			};
+
+			std::vector <ui8> Bytes;
+			ui8 Size = 4;
+						
+			for (ui8 i = 0; i < 4; ++ i) {
+				if ((ui32)Parameters.size() <= Counter + i) {
+					OutOfParams = true;
+
+					Size = i;
+
+					break;
+				};
+				
+				Bytes.push_back(Parameters[Counter + i]);
+			};
+
+			if ((ui32)Bytes.size() == 0) {
+				OutOfParams = true;
+				
+				return 0;
+			};
+
+			Counter += Size;
+
+			switch (Size) {
+				case 1: {
+					return (ui32)Bytes[0];
+					
+					break;
+				};
+				
+				case 2: {
+					return (ui16)((ui32)Bytes[0] << 8) | (ui32)Bytes[1];
+					
+					break;
+				};
+				
+				case 4: default: {
+					return ((ui32)Bytes[0] << 24) | ((ui32)Bytes[1] << 16) | ((ui32)Bytes[2] << 8) | (ui32)Bytes[3];
+					
+					break;
+				};
+			};
+		};
+		
+		std::string GetNextParamStr() {
+			if ((ui32)Parameters.size() <= Counter) {
+				OutOfParams = true;
+
+				return 0;
+			};
+
+			std::string String = "";
+			
+			for (ui32 i = 0; i < (ui32)Parameters.size() and Parameters[Counter + i] != 0; ++ i)
+				String += Parameters[Counter + i];
+
+			Counter += String.length() + 1;
+
+			return String;
+		};
+
+		bool IsOutOfParams() {
+			return OutOfParams;
+		};
+
+		void ResetCounter() {
+			Counter = 0;
+		};
+		
+	private:
+		std::vector <ui8> Parameters;
+		ui32 Counter;
+		bool OutOfParams;
+	};
     
 	class Token {
 	public: 
-		Token(ui8 p_Type, ui32 p_Data):
+		Token(ui8 p_Type, ui8 p_Data):
 			Type(p_Type),
 			Data(p_Data) 
 		{};
 
 		ui8 Type;
-		ui32 Data;
+		ui8 Data;
 	};
 
 	class Function {
@@ -48,13 +203,42 @@ namespace SCBL {
 
 	class Constant {
 	public: 
-		Constant(std::string p_Name, ui32 p_Value):
+		Constant(std::string p_Name, ui32 p_Value, ui8 p_Size):
 			Name(p_Name),
-			Value(p_Value) 
-		{};
+			Size(p_Size)
+		{
+			switch (p_Size) {
+				case 1: {
+					Bytes = {
+						(ui8)p_Value
+					};
+					
+					break;
+				};
+				case 2: {
+					Bytes = {
+						(ui8)((p_Value & 0xFF00) >> 8), 
+						(ui8)(p_Value & 0x00FF)
+					};
+					
+					break;
+				};
+				case 4: default: {
+					Bytes = {
+						(ui8)((p_Value & 0xFF000000) >> 24),
+						(ui8)((p_Value & 0x00FF0000) >> 16),
+						(ui8)((p_Value & 0x0000FF00) >> 8),
+						(ui8)(p_Value & 0x000000FF)
+					};
+
+					break;
+				};
+			};
+		};
 
 		std::string Name;
-		ui32 Value;
+		ui8 Size;
+		std::vector <ui8> Bytes;
 	};
 
 	class SCBL_Interpreter {
@@ -84,13 +268,55 @@ namespace SCBL {
 						++ i;
 					};
 
+					ui8 Size = 4;
+
+					if (p_Code[i] == ':') {
+						++ i;
+
+						if (not (p_Code[i] == '1' or p_Code[i] == '2' or p_Code[i] == '4')) {
+							ErrorMsg = (std::string) "Unexpected bytes count \"" + p_Code[i] + "\"";
+
+							return SCBL_PARSER_ERROR;
+						};
+
+						Size = p_Code[i] - 48;
+
+						++ i;
+					};
+
 					if (not (p_Code[i] <= 32 and p_Code[i] >= 0) and p_Code[i] != ';' and p_Code[i] != '{') {
 						ErrorMsg = (std::string) "Unexpected symbol \"" + p_Code[i] + "\" in number";
         
 						return SCBL_PARSER_ERROR;
 					};
-        
-					Tokens.push_back(Token(SCBL_TYPE_INTEGER, std::stoi(token)));
+
+					switch (Size) {
+						case 1: {
+							Tokens.push_back(Token(SCBL_TYPE_INTEGER, (ui8)std::stoi(token)));
+
+							break;
+						};
+						
+						case 2: {
+							ui16 Integer = std::stoi(token);
+							
+							Tokens.push_back(Token(SCBL_TYPE_INTEGER, (ui8)((Integer & 0xFF00) >> 8)));
+							Tokens.push_back(Token(SCBL_TYPE_INTEGER, (ui8)(Integer & 0x00FF)));
+
+							break;
+						};
+						
+						case 4: default: {
+							ui32 Integer = std::stoi(token);
+							
+							Tokens.push_back(Token(SCBL_TYPE_INTEGER, (ui8)((Integer & 0xFF000000) >> 24)));
+							Tokens.push_back(Token(SCBL_TYPE_INTEGER, (ui8)((Integer & 0x00FF0000) >> 16)));
+							Tokens.push_back(Token(SCBL_TYPE_INTEGER, (ui8)((Integer & 0x0000FF00) >> 8)));
+							Tokens.push_back(Token(SCBL_TYPE_INTEGER, (ui8)(Integer & 0x000000FF)));
+							
+							break;
+						};
+					};
         
 					-- i;
 				} else if (p_Code[i] == '"') {
@@ -148,8 +374,8 @@ namespace SCBL {
 					};
 
 					bool found = false;
-
 					ui32 j;
+					
 					for (j = 0; j < Functions.size(); ++ j)
 						if (Functions[j].Name == token) {
 							found = true;
@@ -157,9 +383,12 @@ namespace SCBL {
 							break;
 						};
         
-					if (found) 
-						Tokens.push_back(Token(SCBL_TYPE_FUNCTION, j));
-					else {
+					if (found) {
+						Tokens.push_back(Token(SCBL_TYPE_FUNCTION, (ui8)((j & 0xFF000000) >> 24)));
+						Tokens.push_back(Token(SCBL_TYPE_FUNCTION, (ui8)((j & 0x00FF0000) >> 16)));
+						Tokens.push_back(Token(SCBL_TYPE_FUNCTION, (ui8)((j & 0x0000FF00) >> 8)));
+						Tokens.push_back(Token(SCBL_TYPE_FUNCTION, (ui8)(j & 0x000000FF)));
+					} else {
 						found = false;
 
 						for (j = 0; j < Constants.size(); ++ j)
@@ -169,9 +398,31 @@ namespace SCBL {
 								break;
 							};
         
-						if (found) 
-							Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[j].Value));
-						else {
+						if (found) {
+							switch (Constants[j].Size) {
+								case 1: {
+									Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[j].Bytes[0]));
+
+									break;
+								};
+								
+								case 2: {
+									Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[j].Bytes[0]));
+									Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[j].Bytes[1]));
+
+									break;
+								};
+								
+								case 4: default: {
+									Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[j].Bytes[0]));
+									Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[j].Bytes[1]));
+									Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[j].Bytes[2]));
+									Tokens.push_back(Token(SCBL_TYPE_INTEGER, Constants[j].Bytes[3]));
+									
+									break;
+								};
+							};
+						} else {
 							ErrorMsg = "Identifier \"" + token + "\" not found";
         
 							return SCBL_PARSER_ERROR;
@@ -186,19 +437,37 @@ namespace SCBL {
 		};
         
 		i8 Run()  {
-			for (i32 i = 0; i < (i32)Tokens.size(); ++ i) {
+			for (ui32 i = 0; i < (ui32)Tokens.size(); ++ i) {
 				if (Tokens[i].Type != SCBL_TYPE_FUNCTION) {
 					ErrorMsg = "[" + std::to_string((int)i) + "] Expected function, got (" + (Tokens[i].Type == SCBL_CMD_END? "CMD_END, " : "INT, ") + ".Data:" + std::to_string(Tokens[i].Data) + ")";
 
 					return SCBL_RUNTIME_ERROR;
 				};
+				
+				if (i + 4 > (ui32)Tokens.size()) {
+					ErrorMsg = "Expected 4 function tokens in a row, got less";
+				
+					return SCBL_RUNTIME_ERROR;
+				};
 
-				ui32 FuncIdx = Tokens[i].Data;
-				std::vector <ui32> Params;
+				std::vector <ui8> Bytes;
 
-				++ i;
+				for (ui32 j = 0; j < 4; ++ j) {
+					if (Tokens[i + j].Type != SCBL_TYPE_FUNCTION) {
+						ErrorMsg = "Expected 4 function tokens in a row, got less";
+					
+						return SCBL_RUNTIME_ERROR;
+					};
+					
+					Bytes.push_back(Tokens[i + j].Data);
+				};
 
-				while (i < (i32)Tokens.size() and Tokens[i].Type != SCBL_CMD_END) {
+				i += 4;
+
+				ui32 FuncIdx = ((ui32)Bytes[0] << 24) | ((ui32)Bytes[1] << 16) | ((ui32)Bytes[2] << 8) | (ui32)Bytes[3];
+				std::vector <ui8> Params;
+
+				while (i < (ui32)Tokens.size() and Tokens[i].Type != SCBL_CMD_END) {
 					if (Tokens[i].Type != SCBL_TYPE_INTEGER) {
 						ErrorMsg = "[" + std::to_string(i) + "] Expected integer, got (" + (Tokens[i].Type == SCBL_CMD_END? "CMD_END, " : "FUNC, ") + ".Data:" + std::to_string(Tokens[i].Data) + ")";
 

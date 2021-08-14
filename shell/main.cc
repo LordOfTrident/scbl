@@ -38,78 +38,99 @@ ui8 exitcode = 0;
 int main(int argc, char* argv[]) {
 	SCBL::SCBL_Interpreter SCBLi;
 
-	SCBLi.AddConstant(SCBL::Constant("NUL", 0));
-	SCBLi.AddConstant(SCBL::Constant("SOH", 1));
-	SCBLi.AddConstant(SCBL::Constant("STX", 2));
-	SCBLi.AddConstant(SCBL::Constant("ETX", 3));
-	SCBLi.AddConstant(SCBL::Constant("EOT", 4));
-	SCBLi.AddConstant(SCBL::Constant("ENQ", 5));
-	SCBLi.AddConstant(SCBL::Constant("ACK", 6));
-	SCBLi.AddConstant(SCBL::Constant("BEL", 7));
-	SCBLi.AddConstant(SCBL::Constant("BS", 8));
-	SCBLi.AddConstant(SCBL::Constant("TAB", 9));
-	SCBLi.AddConstant(SCBL::Constant("NL", 10));
-	SCBLi.AddConstant(SCBL::Constant("VT", 11));
-	SCBLi.AddConstant(SCBL::Constant("FF", 12));
-	SCBLi.AddConstant(SCBL::Constant("CR", 13));
-	SCBLi.AddConstant(SCBL::Constant("SO", 14));
-	SCBLi.AddConstant(SCBL::Constant("SI", 15));
-	SCBLi.AddConstant(SCBL::Constant("DLE", 16));
-	SCBLi.AddConstant(SCBL::Constant("DC1", 17));
-	SCBLi.AddConstant(SCBL::Constant("DC2", 18));
-	SCBLi.AddConstant(SCBL::Constant("DC3", 19));
-	SCBLi.AddConstant(SCBL::Constant("DC4", 20));
-	SCBLi.AddConstant(SCBL::Constant("NAK", 21));
-	SCBLi.AddConstant(SCBL::Constant("SYN", 22));
-	SCBLi.AddConstant(SCBL::Constant("ETB", 23));
-	SCBLi.AddConstant(SCBL::Constant("CAN", 24));
-	SCBLi.AddConstant(SCBL::Constant("EM", 25));
-	SCBLi.AddConstant(SCBL::Constant("SUB", 26));
-	SCBLi.AddConstant(SCBL::Constant("ESC", 27));
-	SCBLi.AddConstant(SCBL::Constant("FS", 28));
-	SCBLi.AddConstant(SCBL::Constant("GS", 29));
-	SCBLi.AddConstant(SCBL::Constant("RS", 30));
-	SCBLi.AddConstant(SCBL::Constant("US", 31));
-	SCBLi.AddConstant(SCBL::Constant("SPACE", 32));
-
-	for (i8 i = 33; i < 127; ++ i)
-		SCBLi.AddConstant(SCBL::Constant(std::string(1, i), i));
+	SCBLi.AddConstant(SCBL::Constant("NUL", 0, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("SOH", 1, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("STX", 2, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("ETX", 3, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("EOT", 4, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("ENQ", 5, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("ACK", 6, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("BEL", 7, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("BS", 8, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("TAB", 9, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("NL", 10, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("VT", 11, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("FF", 12, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("CR", 13, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("SO", 14, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("SI", 15, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("DLE", 16, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("DC1", 17, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("DC2", 18, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("DC3", 19, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("DC4", 20, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("NAK", 21, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("SYN", 22, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("ETB", 23, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("CAN", 24, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("EM", 25, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("SUB", 26, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("ESC", 27, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("FS", 28, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("GS", 29, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("RS", 30, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("US", 31, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("SPACE", 32, SCBL_CONSTANT_1BYTE));
 	
-	SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <ui32> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <ui8> Parameters, void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			std::cout << (char)Parameters[i];
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("printf", [] (std::vector <ui32> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("printf", [] (std::vector <ui8> Parameters, void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			std::cout << (char)Parameters[i];
 	    
 		std::cout << std::endl;
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("printfr", [] (std::vector <ui32> Parameters, void* _) {
-		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
-			std::cout << Parameters[i];
+	SCBLi.AddFunction(SCBL::Function("printfr", [] (std::vector <ui8> Parameters, void* _) {
+		SCBL::ParameterHandler phnd(Parameters);
+		
+		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
+			ui32 Out = phnd.GetNextParam32();
+
+			if (phnd.IsOutOfParams())
+				break;
+			
+			std::cout << Out;
+		};
 
 		std::cout << std::endl;
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("printr", [] (std::vector <ui32> Parameters, void* _) {
-		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
-			std::cout << Parameters[i];
+	SCBLi.AddFunction(SCBL::Function("printr", [] (std::vector <ui8> Parameters, void* _) {
+		SCBL::ParameterHandler phnd(Parameters);
+				
+		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
+			ui32 Out = phnd.GetNextParam32();
+
+			if (phnd.IsOutOfParams())
+				break;
+			
+			std::cout << Out;
+		};
 	}));
 
-	SCBLi.AddFunction(SCBL::Function("cprintr", [] (std::vector <ui32> Parameters, void* _) {
-		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
-			printf("%i", Parameters[i]);
+	SCBLi.AddFunction(SCBL::Function("cprintr", [] (std::vector <ui8> Parameters, void* _) {
+		SCBL::ParameterHandler phnd(Parameters);
+						
+		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
+			ui32 Out = phnd.GetNextParam32();
+
+			if (phnd.IsOutOfParams())
+				break;
+			
+			printf("%i", Out);
+		};
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("cprint", [] (std::vector <ui32> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("cprint", [] (std::vector <ui8> Parameters, void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			printf("%c", Parameters[i]);
 	}));
 
-	SCBLi.AddFunction(SCBL::Function("puts", [] (std::vector <ui32> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("puts", [] (std::vector <ui8> Parameters, void* _) {
 		std::string str = "";
 		
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
@@ -118,36 +139,36 @@ int main(int argc, char* argv[]) {
 		puts(str.c_str());
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("putr", [] (std::vector <ui32> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("putr", [] (std::vector <ui8> Parameters, void* _) {
+		SCBL::ParameterHandler phnd(Parameters);
 		std::string str = "";
-	
-		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
-			str += std::to_string(Parameters[i]);
+						
+		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
+			ui32 Out = phnd.GetNextParam32();
 
+			if (phnd.IsOutOfParams())
+				break;
+			
+			str += std::to_string(Out);
+		};
+		
 		puts(str.c_str());
 	}));
 
-	SCBLi.AddFunction(SCBL::Function("stof", [] (std::vector <ui32> Parameters, void* _) {
-		std::string fname = "";
-		std::string fcontents = "";
+	SCBLi.AddFunction(SCBL::Function("stof", [] (std::vector <ui8> Parameters, void* _) {
+		SCBL::ParameterHandler phnd(Parameters);
 
-		for (ui32 i = 0; i < (ui32)Parameters.size() and Parameters[i] != 0; ++ i)
-			fname += std::string(1, Parameters[i]);
-	    
-		for (ui32 i = fname.length() + 1; i < (ui32)Parameters.size() and Parameters[i] != 0; ++ i) 
-			fcontents += std::string(1, Parameters[i]);
-	    
-		WriteFile(fname, fcontents);
+		WriteFile(phnd.GetNextParamStr(), phnd.GetNextParamStr());
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("exit", [] (std::vector <ui32> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("exit", [] (std::vector <ui8> Parameters, void* _) {
+		SCBL::ParameterHandler phnd(Parameters);
 		running = false;
-	    
-		if (Parameters.size() >= 1)
-			exitcode = Parameters[0];
+
+		exitcode = phnd.GetNextParamInt();
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("help", [] (std::vector <ui32> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("help", [] (std::vector <ui8> Parameters, void* _) {
 		std::cout << "Available functions:\n";
 		std::cout << " Console functions:\n";
 		std::cout << "  print   <...> - Print out encoded characters using std::cout\n";
