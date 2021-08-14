@@ -5,24 +5,25 @@
 #include <vector>
 #include <cstdint>
 
-#define SCBL_TYPE_INTEGER 0
+#define SCBL_TYPE_INTEGER  0
 #define SCBL_TYPE_FUNCTION 1
-#define SCBL_CMD_END 2
+#define SCBL_CMD_END       2
 
 #define SCBL_RUNTIME_OK 0
-#define SCBL_PARSER_OK 0
-#define SCBL_RUNTIME_ERROR 1
-#define SCBL_PARSER_ERROR 1
+#define SCBL_PARSER_OK  0
 
-#define SCBL_CONSTANT_1BYTE 1
+#define SCBL_RUNTIME_ERROR 1
+#define SCBL_PARSER_ERROR  1
+
+#define SCBL_CONSTANT_1BYTE  1
 #define SCBL_CONSTANT_2BYTES 2
 #define SCBL_CONSTANT_4BYTES 4
 
-typedef int8_t i8;
+typedef int8_t  i8;
 typedef int16_t i16;
 typedef int32_t i32;
 
-typedef uint8_t ui8;
+typedef uint8_t  ui8;
 typedef uint16_t ui16;
 typedef uint32_t ui32;
 
@@ -44,9 +45,7 @@ namespace SCBL {
 				return 0;
 			};
 
-			return Parameters[Counter];
-		
-			++ Counter;
+			return Parameters[Counter ++];
 		};
 		
 		ui16 GetNextParam16() {
