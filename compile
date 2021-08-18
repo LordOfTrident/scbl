@@ -2,8 +2,14 @@
 
 printf "\e[0;36m* CMPL: \e[0;33mCreating ./bin/\n\e[0m";
 mkdir -p bin
-printf "\e[0;36m* CMPL: \e[0;33mChecking if g++ is installed\n\e[0m"
-sudo apt install g++
+if [ "$1" != "-nc" ]; then
+    if [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
+		printf "\e[0;36m* CMPL: \e[0;33mChecking if g++ is installed\n\e[0m"
+		sudo apt install g++
+    else
+        printf "\e[0;36m* CMPL: \e[0;33mYour distro is not debian-based, please make sure you have g++ and ncurses, ncursesw libraries installed.\n\e[0m"
+    fi
+fi
 printf "\e[0;36m* CMPL: \e[0;33mCompiling...\n\e[0m";
 
 if g++ shell/main.cc -o bin/scbl -O3 -Wall -std=c++17; then

@@ -43,7 +43,8 @@ Run `compile` as bash in the terminal:
 ```sh
 bash compile
 ```
-then run scbl:
+If you dont want it to check for g++, use the `-nc` parameter.
+Then run scbl:
 ```sh
 scbl
 ```
@@ -108,7 +109,9 @@ SCBL Code: `print "Hello, World!"~ newline;`
 Output: `Hello, World!`
 
 If you want to make parameter checking easier, you can use the `ParameterHandler` class in SCBL namespace.
+
 Constructor: `ParameterHandler(std::vector <uint8_t> Parameters)`
+
 Methods:
 - `uint8_t GetNextParam8()`: Gets the next 1 byte
 - `uint16_t GetNextParam16()`: Gets the next 2 bytes and puts them into one 16bit integer

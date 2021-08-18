@@ -108,8 +108,6 @@ namespace SCBL {
 						
 			for (ui8 i = 0; i < 4; ++ i) {
 				if ((ui32)Parameters.size() <= Counter + i) {
-					OutOfParams = true;
-
 					Size = i;
 
 					break;
