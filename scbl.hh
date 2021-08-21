@@ -253,10 +253,10 @@ namespace SCBL {
 			for (i32 i = 0; i < (i32)p_Code.length(); ++ i) {
 				token = "";
 
-				while (p_Code[i] <= 32 and p_Code[i] >= 0)
+				while (p_Code[i] <= 32 and p_Code[i] >= 0 and i < (i32)p_Code.length())
 					++ i;
         
-				if ((p_Code[i] <= 32 and p_Code[i] >= 0) or i > (i32)p_Code.length()) 
+				if ((p_Code[i] <= 32 and p_Code[i] >= 0) or i >= (i32)p_Code.length()) 
 					continue;
 				else if (p_Code[i] >= '0' and p_Code[i] <= '9') {
 					while (p_Code[i] >= '0' and p_Code[i] <= '9') {
