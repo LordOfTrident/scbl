@@ -44,19 +44,20 @@ Run `compile` as bash in the terminal:
 bash compile
 ```
 If you dont want it to check for g++, use the `-nc` parameter.
-Then run scbl:
+This will generate an executable in bin folder, run it:
 ```sh
-scbl
+./bin/app
 ```
 #### Windows
 First make sure you have g++ installed (Command Prompt will not recognize the `g++` command if you dont) and run the following commands:
 ```bat
 mkdir bin
-g++ -g shell/main.cc -o bin/scbl -O3 -s -Wall -std=c++17;
+g++ -g shell/main.cc -o bin/app -O3 -s -Wall -std=c++17;
 ```
-then run scbl:
+then run it:
 ```bat
-scbl
+cd bin
+app
 ```
 
 ## Embedding with C++

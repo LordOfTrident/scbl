@@ -148,7 +148,7 @@ namespace SCBL {
 			if ((ui32)Parameters.size() <= Counter) {
 				OutOfParams = true;
 
-				return 0;
+				return "";
 			};
 
 			std::string String = "";

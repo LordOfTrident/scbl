@@ -7,16 +7,16 @@ if [ "$1" != "-nc" ]; then
 		printf "\e[0;36m* CMPL: \e[0;33mChecking if g++ is installed\n\e[0m"
 		sudo apt install g++
     else
-        printf "\e[0;36m* CMPL: \e[0;33mYour distro is not debian-based, please make sure you have g++ and ncurses, ncursesw libraries installed.\n\e[0m"
+        printf "\e[0;36m* CMPL: \e[0;33mYour distro is not debian-based, please make sure you have g++ installed.\n\e[0m"
     fi
 fi
 printf "\e[0;36m* CMPL: \e[0;33mCompiling...\n\e[0m";
 
-if g++ shell/main.cc -o bin/scbl -O3 -Wall -std=c++17; then
+if g++ shell/main.cc -o bin/app -O3 -Wall -std=c++17; then
     printf "\e[0;36m* CMPL: \e[0;32mCompiled Succesfully\n";
 
-    printf "\e[0;36m* CMPL: \e[0;33mCopying binary "scbl" to /usr/bin...\n\e[0m";
-    sudo cp ./bin/scbl /usr/bin/
+    printf "\e[0;36m* CMPL: \e[0;33mCopying binary "app" to /usr/bin as "scbl"...\n\e[0m";
+    sudo cp ./bin/app /usr/bin/scbl
     printf "\e[0;36m* CMPL: \e[0;32mDone.\n";
 else
     printf "\e[0;36m* CMPL: \e[0;31mCompilation Failed\n";
