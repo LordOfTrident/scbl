@@ -158,7 +158,16 @@ int main(int argc, char* argv[]) {
 	SCBLi.AddFunction(SCBL::Function("stof", [] (std::vector <ui8> Parameters, void* _) {
 		SCBL::ParameterHandler phnd(Parameters);
 
-		WriteFile(phnd.GetNextParamStr(), phnd.GetNextParamStr());
+		std::string fname = phnd.GetNextParamStr();
+		std::string fcontents = phnd.GetNextParamStr();
+
+		if (phnd.IsOutOfParams()) {
+			std::cout << "Expected 2 string parameters for function 'stof'" << std::endl;
+			
+			return;	
+		};
+		
+		WriteFile(fname, fcontents);
 	}));
 	
 	SCBLi.AddFunction(SCBL::Function("exit", [] (std::vector <ui8> Parameters, void* _) {
