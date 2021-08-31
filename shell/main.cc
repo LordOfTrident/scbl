@@ -88,12 +88,13 @@ int main(int argc, char* argv[]) {
 		SCBL::ParameterHandler phnd(Parameters);
 		
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
-			ui32 Out = phnd.GetNextParam32();
-
-			if (phnd.IsOutOfParams())
+			try {
+				ui32 Out = phnd.GetNextParam32();
+				
+				std::cout << Out;
+			} catch (...) {
 				break;
-			
-			std::cout << Out;
+			};
 		};
 
 		std::cout << std::endl;
@@ -103,12 +104,13 @@ int main(int argc, char* argv[]) {
 		SCBL::ParameterHandler phnd(Parameters);
 				
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
-			ui32 Out = phnd.GetNextParam32();
-
-			if (phnd.IsOutOfParams())
+			try {
+				ui32 Out = phnd.GetNextParam32();
+				
+				std::cout << Out;
+			} catch (...) {
 				break;
-			
-			std::cout << Out;
+			};
 		};
 	}));
 
@@ -116,12 +118,13 @@ int main(int argc, char* argv[]) {
 		SCBL::ParameterHandler phnd(Parameters);
 						
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
-			ui32 Out = phnd.GetNextParam32();
-
-			if (phnd.IsOutOfParams())
+			try {
+				ui32 Out = phnd.GetNextParam32();
+				
+				printf("%i", Out);
+			} catch (...) {
 				break;
-			
-			printf("%i", Out);
+			};
 		};
 	}));
 	
@@ -144,12 +147,13 @@ int main(int argc, char* argv[]) {
 		std::string str = "";
 						
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
-			ui32 Out = phnd.GetNextParam32();
-
-			if (phnd.IsOutOfParams())
+			try {
+				ui32 Out = phnd.GetNextParam32();
+				
+				str += std::to_string(Out);
+			} catch (...) {
 				break;
-			
-			str += std::to_string(Out);
+			};
 		};
 		
 		puts(str.c_str());
@@ -158,23 +162,25 @@ int main(int argc, char* argv[]) {
 	SCBLi.AddFunction(SCBL::Function("stof", [] (std::vector <ui8> Parameters, void* _) {
 		SCBL::ParameterHandler phnd(Parameters);
 
-		std::string fname = phnd.GetNextParamStr();
-		std::string fcontents = phnd.GetNextParamStr();
-
-		if (phnd.IsOutOfParams()) {
+		try {
+			std::string fname = phnd.GetNextParamStr();
+			std::string fcontents = phnd.GetNextParamStr();
+			
+			WriteFile(fname, fcontents);
+		} catch (...) {
 			std::cout << "Expected 2 string parameters for function 'stof'" << std::endl;
 			
 			return;	
 		};
-		
-		WriteFile(fname, fcontents);
 	}));
 	
 	SCBLi.AddFunction(SCBL::Function("exit", [] (std::vector <ui8> Parameters, void* _) {
 		SCBL::ParameterHandler phnd(Parameters);
 		running = false;
 
-		exitcode = phnd.GetNextParamInt();
+		try {
+			exitcode = phnd.GetNextParamInt();
+		} catch (...) {};
 	}));
 	
 	SCBLi.AddFunction(SCBL::Function("help", [] (std::vector <ui8> Parameters, void* _) {
@@ -196,19 +202,16 @@ int main(int argc, char* argv[]) {
 
 	if (argc > 1) {
 		if (not FileExists(argv[1])) {
-			std::cout << (std::string)"File '" + argv[1] + "' not found" << std::endl;
+			std::cout << (std::string)"E: File '" + argv[1] + "' not found" << std::endl;
 		
 			return 0;
 		};
 
-		if (SCBLi.Parse(ReadFile(argv[1])) != SCBL_PARSER_OK) {
-			std::cout << SCBLi.GetErrorMsg() << std::endl;
-
-			return 0;
-		};
-
-		if (SCBLi.Run() != SCBL_RUNTIME_OK) {
-			std::cout << SCBLi.GetErrorMsg() << std::endl;
+		try {
+			SCBLi.Parse(ReadFile(argv[1]));
+			SCBLi.Run();
+		} catch (std::exception &Error) {
+			std::cout << "\nE: " << Error.what() << std::endl;
 
 			return 0;
 		};
@@ -225,16 +228,11 @@ int main(int argc, char* argv[]) {
 		std::cout << "> ";
 		std::getline(std::cin, in);
 
-		if (SCBLi.Parse(in) != SCBL_PARSER_OK) {
-			std::cout << SCBLi.GetErrorMsg() << std::endl;
-			
-			continue;
-		};
-		
-		if (SCBLi.Run() != SCBL_RUNTIME_OK) {
-			std::cout << SCBLi.GetErrorMsg() << std::endl;
-			
-			continue;
+		try {
+			SCBLi.Parse(in);
+			SCBLi.Run();
+		} catch (std::exception &Error) {
+			std::cout << "\nE: " << Error.what() << std::endl;
 		};
 
 		std::cout << std::endl;

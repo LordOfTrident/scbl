@@ -66,9 +66,8 @@ SCBL is really small and simple, so you only need to include the header file `sc
 - `void SetFunction(Function)`: Rewrites, or if not found, pushes the function to the functions stack
 - `void AddConstant(Constant)`: Pushes the constant to the constants stack
 - `void SetConstant(Constant)`: Rewrites, or if not found, pushes the constant to the constants stack
-- `int8_t Parse(std::string Text)`: Parses the text into tokens, returns `SCBL_PARSER_OK` (0) if no errors occured, else returns `SCBL_PARSER_ERROR` (1)
-- `int8_t Run()`: Interprets the parsed text, returns `SCBL_RUNTIME_OK` (0) if no errors occured, else returns `SCBL_RUNTIME_ERROR` (1)
-- `std::string GetErrorMsg()`: Returns the description of the last error
+- `void Parse(std::string Text)`: Parses the text into tokens, throws if there was an error while parsing
+- `void Run()`: Interprets the parsed text, throws if there was an error while interpreting
 
 `Function` and `Constant` are two other classes inside the SCBL namespace. `Function` holds the Name (std::string) and Callback (`void (*callback)(std::vector <uint32_t>)`), `Constant` holds the Name (`std::string`), Bytes (`std::vector <uint8_t>`) and size (`uint8_t`). `Function` and `Constant` constructors:
 - `Function(std::string Name, callback Callback)`
@@ -91,17 +90,12 @@ int main() {
             std::cout << (char)Parameters[i];
     }));
     
-    if (SCBLi.Parse("print \"Hello, World!\"~ newline;") == SCBL_PARSER_ERROR) {
-        std::cout << SCBLi.GetErrorMsg() << std::endl;
-        
-        return 0;
-    };
-    
-    if (SCBLi.Run() == SCBL_RUNTIME_ERROR) {
-        std::cout << SCBLi.GetErrorMsg() << std::endl;
-        
-        return 0;
-    };
+    try {
+		SCBLi.Parse("print \"Hello, World!\"~ newline;");
+		SCBLi.Run();
+	} catch (std::exception &Error) {
+		std::cout << Error.what() << std::endl;
+	};
     
     return 0;
 };
@@ -134,24 +128,25 @@ int main() {
     SCBLi.AddFunction(SCBL::Function("writefile", [] (std::vector <uint8_t> Parameters, void* _) {
         SCBL::ParameterHandler phnd(Parameters);
 	    
-	    std::string filename = phnd.GetNextParamStr();
-	    std::string filecontents = phnd.GetNextParamStr();
-	    
-	    std::ofstream fhnd(filename);
-        fhnd << filecontents;
+	    try {
+			std::string fname = phnd.GetNextParamStr();
+			std::string fcontents = phnd.GetNextParamStr();
+			
+		    std::ofstream fhnd(filename);
+	        fhnd << filecontents;
+		} catch (...) {
+			std::cout << "Expected 2 string parameters for function 'writefile'" << std::endl;
+			
+			return;	
+		};
     }));
     
-    if (SCBLi.Parse("writefile \"File.txt\" \"Hello!\"~ 10:1 \"This is my file :)\"") == SCBL_PARSER_ERROR) {
-        std::cout << SCBLi.GetErrorMsg() << std::endl;
-        
-        return 0;
-    };
-    
-    if (SCBLi.Run() == SCBL_RUNTIME_ERROR) {
-        std::cout << SCBLi.GetErrorMsg() << std::endl;
-        
-        return 0;
-    };
+    try {
+		SCBLi.Parse("writefile \"File.txt\" \"Hello!\"~ 10:1 \"This is my file :)\"");
+		SCBLi.Run();
+	} catch (std::exception &Error) {
+		std::cout << Error.what() << std::endl;
+	};
     
     return 0;
 };
