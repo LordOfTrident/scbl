@@ -1,7 +1,18 @@
-# SCBL
-Simple Command Bar Language
-
-<img src="pic/logo.png"/>
+<h1 align="center">SCBL</h2>
+<p align="center">Simple Command Bar Language</p>
+<p align="center">
+	<a href="./LICENSE">
+		<img alt="License" src="https://img.shields.io/badge/license-GNU-blue?color=7aca00"/>
+	</a>
+	<a href="https://github.com/LordsTrident/scbl/issues">
+		<img alt="Issues" src="https://img.shields.io/github/issues/LordsTrident/scbl?color=0088ff"/>
+	</a>
+	<a href="https://github.com/LordsTrident/scbl/pulls">
+		<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/LordsTrident/scbl?color=0088ff"/>
+	</a>
+	<br><br><br>
+	<img width="500px" src="pic/logo.png"/>
+</p>
 
 A simple, small scripting language to be embedded with a C++ program.
 It is constructed of functions and parameters:
@@ -66,7 +77,7 @@ SCBL is really small and simple, so you only need to include the header file `sc
 - `void SetFunction(Function)`: Rewrites, or if not found, pushes the function to the functions stack
 - `void AddConstant(Constant)`: Pushes the constant to the constants stack
 - `void SetConstant(Constant)`: Rewrites, or if not found, pushes the constant to the constants stack
-- `void Parse(std::string Text)`: Parses the text into tokens, throws if there was an error while parsing
+- `void Parse(std::string)`: Parses the text into tokens, throws if there was an error while parsing
 - `void Run()`: Interprets the parsed text, throws if there was an error while interpreting
 
 `Function` and `Constant` are two other classes inside the SCBL namespace. `Function` holds the Name (std::string) and Callback (`void (*callback)(std::vector <uint32_t>)`), `Constant` holds the Name (`std::string`), Bytes (`std::vector <uint8_t>`) and size (`uint8_t`). `Function` and `Constant` constructors:
@@ -85,7 +96,7 @@ int main() {
     SCBL::SCBL_Interpreter SCBLi;
     
     SCBLi.AddConstant(SCBL::Constant("newline", 10, SCBL_CONSTANT_1BYTE));
-    SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <uint8_t> Parameters, void* _) {
+    SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <uint8_t> Parameters, const void* _) {
         for (uint32_t i = 0; i < (uint32_t)Parameters.size(); ++ i) 
             std::cout << (char)Parameters[i];
     }));
@@ -125,7 +136,7 @@ If any of the GetNext methods run out of parameters without ending succesfully, 
 int main() {
     SCBL::SCBL_Interpreter SCBLi;
     
-    SCBLi.AddFunction(SCBL::Function("writefile", [] (std::vector <uint8_t> Parameters, void* _) {
+    SCBLi.AddFunction(SCBL::Function("writefile", [] (std::vector <uint8_t> Parameters, const void* _) {
         SCBL::ParameterHandler phnd(Parameters);
 	    
 	    try {

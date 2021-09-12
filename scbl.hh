@@ -24,11 +24,11 @@ typedef uint32_t ui32;
 typedef size_t word;
 
 namespace SCBL {
-	typedef void (*callback)(std::vector <ui8>, void*);
+	typedef void (*callback)(std::vector <ui8>, const void*);
 
 	class ParameterHandler {
 	public:
-		ParameterHandler(std::vector <ui8> p_Parameters):
+		ParameterHandler(const std::vector <ui8>& p_Parameters):
 			Parameters(p_Parameters),
 			Counter(0)
 		{};
@@ -144,13 +144,13 @@ namespace SCBL {
 		};
 		
 	private:
-		std::vector <ui8> Parameters;
+		const std::vector <ui8>& Parameters;
 		ui32 Counter;
 	};
     
 	class Token {
 	public: 
-		Token(ui8 p_Type, ui8 p_Data):
+		Token(const ui8& p_Type, const ui8& p_Data):
 			Type(p_Type),
 			Data(p_Data) 
 		{};
@@ -161,7 +161,7 @@ namespace SCBL {
 
 	class Function {
 	public: 
-		Function(std::string p_Name, callback p_Callback):
+		Function(const std::string& p_Name, const callback& p_Callback):
 			Name(p_Name),
 			Callback(p_Callback) 
 		{};
@@ -172,7 +172,7 @@ namespace SCBL {
 
 	class Constant {
 	public: 
-		Constant(std::string p_Name, ui32 p_Value, ui8 p_Size):
+		Constant(const std::string& p_Name, const ui32& p_Value, const ui8& p_Size):
 			Name(p_Name),
 			Size(p_Size)
 		{
@@ -214,7 +214,7 @@ namespace SCBL {
 	public: 
 		SCBL_Interpreter() {};
 
-		void Parse(std::string p_Code) {
+		void Parse(const std::string& p_Code) {
 			Tokens = {};
 
 			std::string token;
@@ -416,15 +416,15 @@ namespace SCBL {
 			};
 		};
 
-		void SetUserData(void* p_userdata) {
+		void SetUserData(const void* p_userdata) {
 			UserData = p_userdata;
 		};
 		
-		void AddFunction(Function p_func) {
+		void AddFunction(const Function& p_func) {
 			Functions.push_back(p_func);
 		};
 
-		void SetFunction(Function p_func) {
+		void SetFunction(const Function& p_func) {
 			for (ui32 i = 0; i < (ui32)Functions.size(); ++ i) {
 				if (Functions[i].Name == p_func.Name) {
 					Functions[i] = p_func;
@@ -436,11 +436,11 @@ namespace SCBL {
 			Functions.push_back(p_func);
 		};
         
-		void AddConstant(Constant p_const) {
+		void AddConstant(const Constant& p_const) {
 			Constants.push_back(p_const);
 		};
 
-		void SetConstant(Constant p_const) {
+		void SetConstant(const Constant& p_const) {
 			for (ui32 i = 0; i < (ui32)Constants.size(); ++ i) {
 				if (Constants[i].Name == p_const.Name) {
 					Constants[i] = p_const;
@@ -457,6 +457,6 @@ namespace SCBL {
 		std::vector <Function> Functions;
 		std::vector <Constant> Constants;
 
-		void* UserData;
+		const void* UserData;
 	};
 };

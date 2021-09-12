@@ -4,13 +4,13 @@
 
 #include "../scbl.hh"
 
-bool FileExists(std::string p_name) {
+bool FileExists(const std::string& p_name) {
 	std::ifstream fhnd(p_name);
     
 	return fhnd.good();
 };
 
-std::string ReadFile(std::string p_fname) {
+std::string ReadFile(const std::string& p_fname) {
 	std::string fstr = "";
 	std::ifstream fhnd(p_fname);
 
@@ -26,7 +26,7 @@ std::string ReadFile(std::string p_fname) {
 	return fstr;
 };
 
-void WriteFile(std::string p_fname, std::string p_txt) {
+void WriteFile(const std::string& p_fname, const std::string& p_txt) {
 	std::ofstream fhnd(p_fname);
 
 	fhnd << p_txt;
@@ -35,25 +35,25 @@ void WriteFile(std::string p_fname, std::string p_txt) {
 bool running = false;
 ui8 exitcode = 0;
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
 	SCBL::SCBL_Interpreter SCBLi;
 
-	SCBLi.AddConstant(SCBL::Constant("NUL", 0, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("SOH", 1, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("STX", 2, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("ETX", 3, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("EOT", 4, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("ENQ", 5, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("ACK", 6, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("BEL", 7, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("BS", 8, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("TAB", 9, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("NL", 10, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("VT", 11, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("FF", 12, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("CR", 13, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("SO", 14, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("SI", 15, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("NUL", 0,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("SOH", 1,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("STX", 2,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("ETX", 3,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("EOT", 4,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("ENQ", 5,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("ACK", 6,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("BEL", 7,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("BS",  8,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("TAB", 9,  SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("NL",  10, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("VT",  11, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("FF",  12, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("CR",  13, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("SO",  14, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("SI",  15, SCBL_CONSTANT_1BYTE));
 	SCBLi.AddConstant(SCBL::Constant("DLE", 16, SCBL_CONSTANT_1BYTE));
 	SCBLi.AddConstant(SCBL::Constant("DC1", 17, SCBL_CONSTANT_1BYTE));
 	SCBLi.AddConstant(SCBL::Constant("DC2", 18, SCBL_CONSTANT_1BYTE));
@@ -63,28 +63,27 @@ int main(int argc, char* argv[]) {
 	SCBLi.AddConstant(SCBL::Constant("SYN", 22, SCBL_CONSTANT_1BYTE));
 	SCBLi.AddConstant(SCBL::Constant("ETB", 23, SCBL_CONSTANT_1BYTE));
 	SCBLi.AddConstant(SCBL::Constant("CAN", 24, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("EM", 25, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("EM",  25, SCBL_CONSTANT_1BYTE));
 	SCBLi.AddConstant(SCBL::Constant("SUB", 26, SCBL_CONSTANT_1BYTE));
 	SCBLi.AddConstant(SCBL::Constant("ESC", 27, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("FS", 28, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("GS", 29, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("RS", 30, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("US", 31, SCBL_CONSTANT_1BYTE));
-	SCBLi.AddConstant(SCBL::Constant("SPACE", 32, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("FS",  28, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("GS",  29, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("RS",  30, SCBL_CONSTANT_1BYTE));
+	SCBLi.AddConstant(SCBL::Constant("US",  31, SCBL_CONSTANT_1BYTE));
 	
-	SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("print", [] (std::vector <ui8> Parameters, const void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			std::cout << (char)Parameters[i];
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("printf", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("printf", [] (std::vector <ui8> Parameters, const void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			std::cout << (char)Parameters[i];
 	    
 		std::cout << std::endl;
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("printfr", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("printfr", [] (std::vector <ui8> Parameters, const void* _) {
 		SCBL::ParameterHandler phnd(Parameters);
 		
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
@@ -100,7 +99,7 @@ int main(int argc, char* argv[]) {
 		std::cout << std::endl;
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("printr", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("printr", [] (std::vector <ui8> Parameters, const void* _) {
 		SCBL::ParameterHandler phnd(Parameters);
 				
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
@@ -114,7 +113,7 @@ int main(int argc, char* argv[]) {
 		};
 	}));
 
-	SCBLi.AddFunction(SCBL::Function("cprintr", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("cprintr", [] (std::vector <ui8> Parameters, const void* _) {
 		SCBL::ParameterHandler phnd(Parameters);
 						
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) {
@@ -128,12 +127,12 @@ int main(int argc, char* argv[]) {
 		};
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("cprint", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("cprint", [] (std::vector <ui8> Parameters, const void* _) {
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
 			printf("%c", Parameters[i]);
 	}));
 
-	SCBLi.AddFunction(SCBL::Function("puts", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("puts", [] (std::vector <ui8> Parameters, const void* _) {
 		std::string str = "";
 		
 		for (ui32 i = 0; i < (ui32)Parameters.size(); ++ i) 
@@ -142,7 +141,7 @@ int main(int argc, char* argv[]) {
 		puts(str.c_str());
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("putr", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("putr", [] (std::vector <ui8> Parameters, const void* _) {
 		SCBL::ParameterHandler phnd(Parameters);
 		std::string str = "";
 						
@@ -159,7 +158,7 @@ int main(int argc, char* argv[]) {
 		puts(str.c_str());
 	}));
 
-	SCBLi.AddFunction(SCBL::Function("stof", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("stof", [] (std::vector <ui8> Parameters, const void* _) {
 		SCBL::ParameterHandler phnd(Parameters);
 
 		try {
@@ -174,7 +173,7 @@ int main(int argc, char* argv[]) {
 		};
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("exit", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("exit", [] (std::vector <ui8> Parameters, const void* _) {
 		SCBL::ParameterHandler phnd(Parameters);
 		running = false;
 
@@ -183,7 +182,7 @@ int main(int argc, char* argv[]) {
 		} catch (...) {};
 	}));
 	
-	SCBLi.AddFunction(SCBL::Function("help", [] (std::vector <ui8> Parameters, void* _) {
+	SCBLi.AddFunction(SCBL::Function("help", [] (std::vector <ui8> Parameters, const void* _) {
 		std::cout << "Available functions:\n";
 		std::cout << " Console functions:\n";
 		std::cout << "  print   <...> - Print out encoded characters using std::cout\n";
