@@ -150,7 +150,7 @@ namespace SCBL {
     
 	class Token {
 	public: 
-		Token(const ui8& p_Type, const ui8& p_Data):
+		Token(ui8 p_Type, ui8 p_Data):
 			Type(p_Type),
 			Data(p_Data) 
 		{};
@@ -172,7 +172,7 @@ namespace SCBL {
 
 	class Constant {
 	public: 
-		Constant(const std::string& p_Name, const ui32& p_Value, const ui8& p_Size):
+		Constant(const std::string& p_Name, ui32 p_Value, ui8 p_Size):
 			Name(p_Name),
 			Size(p_Size)
 		{
