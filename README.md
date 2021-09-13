@@ -2,7 +2,7 @@
 <p align="center">Simple Command Bar Language</p>
 <p align="center">
 	<a href="./LICENSE">
-		<img alt="License" src="https://img.shields.io/badge/license-GNU-blue?color=7aca00"/>
+		<img alt="License" src="https://img.shields.io/badge/license-GPL-blue?color=7aca00"/>
 	</a>
 	<a href="https://github.com/LordsTrident/scbl/issues">
 		<img alt="Issues" src="https://img.shields.io/github/issues/LordsTrident/scbl?color=0088ff"/>
